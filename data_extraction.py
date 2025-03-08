@@ -9,7 +9,7 @@ load_dotenv()
 VisionAgent_api = os.getenv("VisionAgent_api")
 
 # Read the PDF
-input_pdf_path = "D:/Projects/Cognic AI/INTELLIHACK 5.0/Intellihack_Cognic_AI_03/q3_dataset/DeepSeek-R1.pdf"
+input_pdf_path = "./datasets/DeepSeek-R1.pdf"
 reader = PdfReader(input_pdf_path)
 
 url = "https://api.va.landing.ai/v1/tools/agentic-document-analysis"
@@ -44,8 +44,8 @@ for page in range(2, 16, 2):
     # Update the JSON content with the new response
     json_content[f"pages_{page + 1}_{page + 2}"] = response.json()
     
-    # Save JSON content after each API call
-    with open("DeepSeek-R1.json", "w") as json_file:
+    # Save JSON content after each API call to the datasets folder
+    with open("./datasets/DeepSeek-R1.json", "w") as json_file:
         json_file.write(json.dumps(json_content, indent=4))
     
     # Log the progress
