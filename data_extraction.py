@@ -41,12 +41,22 @@ for page in range(2, 16, 2):
     }
     response = requests.post(url, files=files, headers=headers)
     
-    # Update the JSON content with the new response
-    json_content[f"pages_{page + 1}_{page + 2}"] = response.json()
+    # Get the response data
+    response_data = response.json()
     
-    # Save JSON content after each API call to the datasets folder
-    with open("./datasets/DeepSeek-R1.json", "w") as json_file:
-        json_file.write(json.dumps(json_content, indent=4))
+    # Extract text from chunks to create the markdown content
+    if "data" in response_data and "chunks" in response_data["data"]:
+        content = ""
+        for chunk in response_data["data"]["chunks"]:
+            if "text" in chunk:
+                content += chunk["text"] + "\n\n"
+        
+        content = content.strip()
+    
+    # Save the markdown content to a single .md file after each API call
+    with open("./datasets/DeepSeek-R1.md", "a") as md_file:  # Append mode to save all content
+        md_file.write(f"# Pages {page + 1} and {page + 2}\n\n")
+        md_file.write(content + "\n\n")
     
     # Log the progress
-    print(f"Processed pages {page + 1} and {page + 2}, saved to DeepSeek-R1.json")
+    print(f"Processed pages {page + 1} and {page + 2}, saved to DeepSeek-R1.md")
